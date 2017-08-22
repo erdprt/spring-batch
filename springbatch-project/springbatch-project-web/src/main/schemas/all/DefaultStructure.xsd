@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://erdprt.org/DefaultStructure" 
+	xmlns:tns="http://erdprt.org/DefaultStructure" 
+	xmlns:cn="http://erdprt.org/CommonStructure"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://erdprt.org/CommonStructure" schemaLocation="../common/CommonStructure.xsd"/>
+
+    <xs:element name="Message" type="tns:MessageType"/>
+
+    <xs:complexType name="MessageType">
+    	<xs:sequence>
+    		<xs:element ref="cn:MetaData"/>
+    		<xs:element name="Body" type="tns:BodyType" maxOccurs="1" minOccurs="1"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BodyType">
+    	<xs:sequence>
+       		<xs:element name="persons" type="tns:PersonsType" maxOccurs="1" minOccurs="1" />
+       	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PersonType">
+    	<xs:sequence>
+    		<xs:element name="civilStatus" type="tns:CivilStatusType"/>
+    		<xs:element name="address" type="tns:AddressType"/>
+    		<xs:element ref="cn:products"/>
+    	</xs:sequence>
+    	<xs:attribute name="id" type="xs:string"></xs:attribute>
+    	<xs:attribute name="code" type="xs:string"></xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="CivilStatusType">
+    	<xs:sequence>
+    		<xs:element name="lastName" type="xs:string"/>
+    		<xs:element name="firstName" type="xs:string"/>
+    		<xs:element name="civility" type="xs:string"/>
+    		<xs:element name="birthDate" type="xs:dateTime"/>
+    		<xs:element name="nationality" type="xs:string"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AddressType">
+    	<xs:sequence>
+    		<xs:element name="street" type="xs:string"/>
+    		<xs:element name="city" type="xs:string"/>
+    		<xs:element name="zipCode" type="xs:string"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PersonsType">
+    	<xs:sequence>
+    		<xs:element name="person" type="tns:PersonType" maxOccurs="unbounded" minOccurs="1"/>
+    	</xs:sequence>
+    	    	<xs:attribute name="count" type="xs:long"></xs:attribute>
+    </xs:complexType>
+
+
+</xs:schema>

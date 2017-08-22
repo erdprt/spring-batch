@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" 
+	xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+	xmlns:integration="http://www.springframework.org/schema/integration"
+	xmlns:util="http://www.springframework.org/schema/beans"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans.xsd 
+					http://www.springframework.org/schema/util 
+					http://www.springframework.org/schema/util/spring-util.xsd
+					http://www.springframework.org/schema/batch 
+	                http://www.springframework.org/schema/batch/spring-batch.xsd
+	                http://www.springframework.org/schema/integration 
+	                http://www.springframework.org/schema/integration/spring-integration.xsd
+	                http://www.springframework.org/schema/integration/jms 
+	                http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+	                http://www.springframework.org/schema/jee 
+	                http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+	<!--                           Inventory Export Partitioning Job                                  -->
+
+	<bean id="inventoryPartitioningJpaPagingItemReader" class="org.springframework.batch.item.database.JpaPagingItemReader" scope="step">
+	    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+	    <property name="queryString" value="${inventoryPartitioningExportJob.jpaReader.sql}"/>
+	    <property name="pageSize" value="${inventoryPartitioningExportJob.jpaReader.pageSize}"/>
+	    <property name="transacted" value="${inventoryPartitioningExportJob.jpaReader.transacted}"/>
+		<property name="parameterValues">
+		<map>
+			<entry key="minId" value="#{stepExecutionContext['ID_DECL_DSN_MIN']}" />
+			<entry key="maxId" value="#{stepExecutionContext['ID_DECL_DSN_MAX']}" />
+		</map>
+		</property>
+	</bean>	
+	
+	<bean id="extractInventoryPartitioningProcessor" class="org.springframework.batch.item.support.CompositeItemProcessor">
+		<property name="delegates">
+			<list>
+				<ref bean="inventoryExportPartitioningProcessor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="inventoryExportPartitioningProcessor" class="fr.erdprt.samples.springbatch.processors.inventory.InventoryExportProcessor" scope="step">
+	</bean>
+	
+	<bean id="dummyInventoryPartitionningObjectWriter"
+		class="fr.erdprt.samples.springbatch.writers.DummyObjectWriter" scope="step">
+	</bean>
+	
+	<batch:job id="inventoryExportPartitionningJob" incrementer="jobParametersIncrementer" restartable="true" job-repository="jobRepository">
+		<batch:step id="inventoryExportPartitionningStep.master">
+			<batch:partition step="inventoryExportPartitionningStep.slave" partitioner="inventoryExportPartitioner" handler="messageChannelCategoryPartitionHandler">
+				<batch:handler grid-size="1" task-executor="inventoryExportTaskExecutor" />
+			</batch:partition>
+		</batch:step>
+	</batch:job>
+	
+	<batch:step id="inventoryExportPartitionningStep.slave" >
+		<batch:tasklet transaction-manager="transactionManager" >
+			<batch:chunk reader="inventoryPartitioningJpaPagingItemReader" processor="extractInventoryPartitioningProcessor" writer="dummyInventoryPartitionningObjectWriter" commit-interval="${inventoryPartitioningExportJob.commit.interval}">
+			</batch:chunk>
+		</batch:tasklet>
+	</batch:step>
+	
+	<bean id="inventoryExportPartitioner" class="fr.erdprt.samples.springbatch.partitioners.InventoryExportPartitioner" scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlPartitionnement" value="${inventoryPartitioningExportJob.range.sql}" />
+		<property name="nbThreads" value="#{jobParameters['inventoryPartitioningExportJob.grid.size']}" />
+	</bean>
+
+	<bean id="inventoryExportTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" scope="step">
+		<property name="corePoolSize" value="#{jobParameters['inventoryPartitioningExportJob.grid.size']}" />
+		<property name="maxPoolSize" value="#{jobParameters['inventoryPartitioningExportJob.grid.size']}" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
+	
+	
+	<!-- Remote partitioning -->
+	
+	<!-- JMS Part -->
+	
+	<integration:channel id="requestCategoryChannel">
+		<integration:queue />
+	</integration:channel>
+
+	<integration:channel id="replyCategoryChannel">
+		<integration:queue />
+	</integration:channel>
+	
+	<bean id="messageChannelCategoryPartitionHandler" class="org.springframework.batch.integration.partition.MessageChannelPartitionHandler">		
+		<property name="stepName" value="cotisationsDeclareesStep.slave" />
+		<property name="messagingOperations">
+			<bean class="org.springframework.integration.core.MessagingTemplate">
+				<property name="defaultChannel" ref="requestCategoryChannel" />
+				<property name="receiveTimeout" value="${dsn.timeout:3600000}" />
+			</bean>
+		</property>
+	</bean>
+
+	<int-jms:outbound-gateway request-channel="requestCategoryChannel" request-destination-name="requestCategoryQueue"
+		reply-channel="replyCategoryChannel" reply-destination-name="replyCategoryQueue" receive-timeout="${category.timeout:3600000}" auto-startup="true"
+		connection-factory="connectionFactory" >
+	</int-jms:outbound-gateway>
+
+	<integration:aggregator ref="messageChannelCategoryPartitionHandler" input-channel="replyCategoryChannel" />
+
+	<integration:poller id="poller" default="true" fixed-delay="1000"/>
+		
+	<beans profile="master">
+		<jee:jndi-lookup id="connectionFactory" jndi-name="java:/ConnectionFactory" />
+	</beans>
+	
+	<beans profile="worker">
+		<int-jms:inbound-gateway request-channel="worker" request-destination-name="requestCategoryQueue" concurrent-consumers="${category.nb.thread.worker:5}" auto-startup="true"/>
+	</beans>
+	
+	<beans profile="worker,remoteWorker">
+		<integration:service-activator ref="stepExecutionRequestHandler" input-channel="worker" auto-startup="true" />
+
+		<bean id="stepExecutionRequestHandler" class="org.springframework.batch.integration.partition.StepExecutionRequestHandler">
+			<property name="jobExplorer" ref="jobExplorer" />
+			<property name="stepLocator" ref="stepLocator" />
+		</bean>
+	</beans>
+	
+	<beans profile="remoteWorker">
+	
+		<jee:jndi-lookup id="urlServerJMS" jndi-name="url/serverJMS" expected-type="java.net.URL" />
+	
+		<bean name="connectionFactory" class="org.hornetq.jms.client.HornetQJMSConnectionFactory">
+			<constructor-arg index="0" value="false" />
+			<constructor-arg index="1">
+				<bean name="transportConfiguration" class="org.hornetq.api.core.TransportConfiguration">
+					<constructor-arg index="0" value="org.hornetq.core.remoting.impl.netty.NettyConnectorFactory" />
+					<constructor-arg index="1">
+						<bean class="fr.erdprt.samples.commons.remote.connection.TransportConfigurationMapParameters" factory-method="getMap">
+							<constructor-arg ref="urlServerJMS" />
+						</bean>
+					</constructor-arg>
+				</bean>
+			</constructor-arg>
+		</bean>
+	
+	</beans>
+	
+	<beans>
+		<bean id="stepLocator" class="org.springframework.batch.integration.partition.BeanFactoryStepLocator" />
+
+		<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+			<property name="connectionFactory" ref="connectionFactory" />
+			<property name="receiveTimeout" value="100" />
+			<property name="sessionTransacted" value="true" />
+		</bean>
+	</beans>
+		
+</beans>

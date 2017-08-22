@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans.xsd 
+					http://www.springframework.org/schema/util 
+					http://www.springframework.org/schema/util/spring-util.xsd
+					http://www.springframework.org/schema/batch 
+	                http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<bean id="dummyItemReader"
+		class="fr.erdprt.samples.springbatch.readers.DummyItemReader" scope="step">
+	</bean>
+
+	<bean id="dummyStringWriter"
+		class="fr.erdprt.samples.springbatch.writers.DummyStringWriter" scope="step">
+	</bean>
+
+	<batch:step id="dummyStep">
+		<batch:tasklet >
+			<batch:chunk reader="dummyItemReader" writer="dummyStringWriter" commit-interval="#{jobParameters['commit.interval']}" />
+			<!--
+			<batch:chunk reader="dummyItemReader" writer="dummyStringWriter" commit.interval="10" />
+			  -->
+		</batch:tasklet>
+	</batch:step>
+
+	<batch:job id="dummyJob" incrementer="jobParametersIncrementer" restartable="true">
+		<batch:step id="step1" parent="dummyStep" />
+	</batch:job>
+	
+
+	
+</beans>

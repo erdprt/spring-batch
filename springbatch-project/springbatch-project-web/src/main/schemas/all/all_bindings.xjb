@@ -1,0 +1,18 @@
+<jxb:bindings version="1.0"
+               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+               
+	<jxb:globalBindings collectionType="java.util.ArrayList">
+			<jxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+				parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+				printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+	</jxb:globalBindings>
+
+  <jxb:bindings schemaLocation="DefaultStructure.xsd" node="/xs:schema"/>
+  <jxb:bindings schemaLocation="InventoryStructure.xsd" node="/xs:schema"/>
+  <jxb:bindings schemaLocation="PersonStructure.xsd" node="/xs:schema"/>
+  <jxb:bindings schemaLocation="ProductStructure.xsd" node="/xs:schema"/>
+  <jxb:bindings schemaLocation="CategoryStructure.xsd" node="/xs:schema"/>  
+  <jxb:bindings schemaLocation="OrderStructure.xsd" node="/xs:schema"/>  
+
+</jxb:bindings>

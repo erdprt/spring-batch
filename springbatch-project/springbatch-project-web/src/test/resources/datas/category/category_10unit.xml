@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<ns2:Message xmlns:ns2="http://erdprt.org/CategoryStructure"
+	xmlns="http://erdprt.org/CommonStructure">
+	<MetaData>
+		<from>fromApplication1</from>
+		<to>toApplication2</to>
+		<nature>inventory.update</nature>
+		<contentType>xml</contentType>
+	</MetaData>
+	<ns2:Body>
+		<ns2:categories>
+			<ns2:category>
+				<ns2:id>CAT0</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT0</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT0</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT1</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT1</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT1</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT2</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT2</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT2</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT3</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT3</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT3</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT4</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT4</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT4</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT5</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT5</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT5</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT6</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT6</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT6</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT7</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT7</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT7</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT8</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT8</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT8</ns2:description>
+			</ns2:category>
+			<ns2:category>
+				<ns2:id>CAT9</ns2:id>
+				<ns2:label>LABEL FOR CATEGORY CAT9</ns2:label>
+				<ns2:description>DESCRIPTION FOR CATEGORY CAT9</ns2:description>
+			</ns2:category>
+		</ns2:categories>
+	</ns2:Body>
+</ns2:Message>

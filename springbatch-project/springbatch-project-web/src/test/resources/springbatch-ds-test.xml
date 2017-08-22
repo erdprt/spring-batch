@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p"
+	   	xmlns:context="http://www.springframework.org/schema/context" 
+    	xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+    	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    	xmlns:tx="http://www.springframework.org/schema/tx"
+    	xsi:schemaLocation=
+    		"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+    		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<jdbc:initialize-database data-source="dataSource"  ignore-failures="DROPS">
+		<jdbc:script location="${ddl.springbatch.drop.tables}"/>
+	    <jdbc:script location="${ddl.springbatch.create.tables}"/>
+	    <jdbc:script location="${ddl.business.drop.constraints}"/>
+	    <jdbc:script location="${ddl.business.drop.tables}"/>	    
+	    <jdbc:script location="${ddl.business.create.tables}"/>
+	    <jdbc:script location="${ddl.business.create.constraints}"/>
+	    <jdbc:script location="${ddl.business.insert}"/>
+	</jdbc:initialize-database>
+	
+    <context:component-scan base-package="fr.erdprt.samples.persistance.model.products.services.business" />
+
+    <context:annotation-config />
+    <tx:annotation-driven />
+    
+    <jpa:repositories base-package="fr.erdprt.samples.persistance.model.products.services.dao" />
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="h2ScriptUtility" class="fr.erdprt.samples.persistance.database.H2ScriptUtility">
+		<property name="user" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+		<property name="url" value="${db.url}"/>
+		<property name="driver" value="${db.driver}"/>
+	</bean>
+	
+	
+	<bean id="jobParametersIncrementer"
+		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+
+	<bean id="jobOperator"
+		class="org.springframework.batch.core.launch.support.SimpleJobOperator"
+		p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
+		p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
+
+	<bean id="jobExplorer"
+		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+		p:dataSource-ref="dataSource" />
+
+	<bean id="jobRegistry"
+		class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+	</bean>
+
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"
+		p:dataSource-ref="dataSource" p:transactionManager-ref="transactionManager" p:isolationLevelForCreate="ISOLATION_DEFAULT" />
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource">
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="suppressClose" value="true" />
+	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="${persistenceUnitName}" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="fr.erdprt.samples.persistance.model.products"/>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.use_sql_comments">false</prop>
+
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.jdbc.fetch_size">100</prop>
+				<prop key="hibernate.order_inserts">true</prop>
+				<prop key="hibernate.order_updates">true</prop>
+				
+				<prop key="hibernate.default_schema">${hibernate.schema}</prop>
+
+				<prop key="javax.persistence.validation.mode">callback</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+</beans>

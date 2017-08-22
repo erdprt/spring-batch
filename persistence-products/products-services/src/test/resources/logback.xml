@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %level [%logger.%M:%line] %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+
+	<logger name="fr.erdprt.samples.persistance.model.products.listeners" level="TRACE" />
+	<logger name="fr.erdprt.samples" level="DEBUG" />
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="DEBUG" />
+    <!-- To see sql  script execution -->
+    <logger name="org.springframework.jdbc.datasource.init.ScriptUtils" level="DEBUG" />
+
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+	<!--    
+    <logger name="org.hibernate.SQL" level="TRACE" />
+      -->
+    <logger name="org.hibernate.persister.entity.AbstractEntityPersister" level="DEBUG" />
+    
+    <logger name="fr.erdprt.samples.persistance.model.products.services.business" level="DEBUG"/>
+    
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

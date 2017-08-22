@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<ns2:Message xmlns:ns2="http://erdprt.org/InventoryStructure"
+	xmlns="http://erdprt.org/CommonStructure">
+	<MetaData>
+		<from>fromApplication1</from>
+		<to>toApplication2</to>
+		<nature>inventory.update</nature>
+		<contentType>xml</contentType>
+	</MetaData>
+	<ns2:Body>
+		<ns2:inventory>
+			<products count="10">
+				<product code="PROD31" label="LABEL FOR PRODUCT PROD31"
+					id="fdbf4708-aa5a-40b6-bc4a-9f4c842a81f6" quantity="1065"
+					date="2014-05-09T17:56:41.228+02:00" price="101.2" category="CAT3"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD73" label="LABEL FOR PRODUCT PROD73"
+					id="7f1f949c-dd5d-4687-a9bf-b06c33fc7485" quantity="639"
+					date="2014-05-09T17:56:41.230+02:00" price="200.1" category="CAT3"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD149" label="LABEL FOR PRODUCT PROD149"
+					id="53d7a520-596d-4cf2-b36c-907f68c24ac2" quantity="1667"
+					date="2014-05-09T17:56:41.232+02:00" price="11.5" category="CAT2"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD13" label="LABEL FOR PRODUCT PROD13"
+					id="c154e1fa-2d27-4290-9c13-133d13013018" quantity="579"
+					date="2014-05-09T17:56:41.233+02:00" price="11.5" category="CAT2"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD84" label="LABEL FOR PRODUCT PROD84"
+					id="1428fdb2-580a-4faa-a6e0-3cbfc915532c" quantity="250"
+					date="2014-05-09T17:56:41.234+02:00" price="94.3" category="CAT3"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD62" label="LABEL FOR PRODUCT PROD62"
+					id="62f168b1-1ea0-426f-a871-e77c55706d14" quantity="130"
+					date="2014-05-09T17:56:41.235+02:00" price="108.1" category="CAT3"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD105" label="LABEL FOR PRODUCT PROD105"
+					id="ac72b343-a98e-400f-8372-33b9f968be89" quantity="1153"
+					date="2014-05-09T17:56:41.236+02:00" price="27.6" category="CAT4"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD3" label="LABEL FOR PRODUCT PROD3"
+					id="9b183eb2-8cf3-484c-bc82-26b58acf5854" quantity="6"
+					date="2014-05-09T17:56:41.238+02:00" price="223.1" category="CAT1"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD38" label="LABEL FOR PRODUCT PROD38"
+					id="5a91eef7-1e10-48c3-8ac9-bda3d145dd61" quantity="292"
+					date="2014-05-09T17:56:41.240+02:00" price="13.8" category="CAT2"
+					available="true" status="ACTIVE"></product>
+				<product code="PROD54" label="LABEL FOR PRODUCT PROD54"
+					id="51227858-f95a-47bc-b873-ccc648050262" quantity="937"
+					date="2014-05-09T17:56:41.241+02:00" price="156.4" category="CAT4"
+					available="true" status="ACTIVE"></product>
+			</products>
+		</ns2:inventory>
+	</ns2:Body>
+</ns2:Message>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<dependencies>
+           <module name="javax.servlet.jstl.api" export="true" />
+			<module name="org.jboss.remoting-jmx" services="import" export="true" />
+			<module name="org.hornetq" services="import" export="true" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

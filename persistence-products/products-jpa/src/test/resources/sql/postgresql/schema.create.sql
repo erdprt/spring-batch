@@ -1,0 +1,1 @@
+CREATE SCHEMA sch_billings AUTHORIZATION user_billings;

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p"
+	   	xmlns:context="http://www.springframework.org/schema/context" 
+    	xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+    	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    	xmlns:tx="http://www.springframework.org/schema/tx"
+    	xmlns:jee="http://www.springframework.org/schema/jee"
+    	xsi:schemaLocation=
+    		"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+    		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+    		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	
+    <context:component-scan base-package="fr.erdprt.samples.persistance.model.products.services.business" />
+
+    <context:annotation-config />
+    <tx:annotation-driven />
+    
+	<jpa:repositories base-package="fr.erdprt.samples.persistance.model.products.services.dao"
+						transaction-manager-ref="transactionManager" 
+						entity-manager-factory-ref="entityManagerFactory" />
+    
+	<!--    Spring batch job settings -->
+	
+	<bean id="jobParametersIncrementer"
+		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+
+	<bean id="jobOperator"
+		class="org.springframework.batch.core.launch.support.SimpleJobOperator"
+		p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
+		p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
+
+	<bean id="jobExplorer"
+		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+		p:dataSource-ref="dataSource" />
+
+	<bean id="jobRegistry"
+		class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+	</bean>
+
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"
+		p:dataSource-ref="dataSource" p:transactionManager-ref="transactionManager" p:isolationLevelForCreate="ISOLATION_DEFAULT" />
+
+
+	<!--    Database connnection settings -->
+	
+	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/springbatchDS"/>
+		
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="${persistenceUnitName}" />
+		<!--
+		<property name="dataSource" ref="dataSource" />
+		  -->
+		<property name="jtaDataSource" ref="dataSource" />
+		<property name="packagesToScan" value="fr.erdprt.samples.persistance.model.products"/>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+				<prop key="hibernate.connection.release_mode">on_close</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.use_sql_comments">false</prop>
+				<prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</prop>
+				<prop key="hibernate.order_inserts">true</prop>
+				<prop key="hibernate.order_updates">true</prop>
+				<prop key="new_generator_mappings">false</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</prop>
+				<prop key="hibernate.id.new_generator_mapping">false</prop>
+			</props>
+		</property>
+		<property name="persistenceUnitPostProcessors" ref="persistenceUnitPostProcessors"/>
+	</bean>
+	
+	<bean id="persistenceUnitPostProcessors" class="fr.erdprt.samples.persistance.utility.DefaultPersistenceUnitPostProcessor">
+		<constructor-arg>
+			<bean class="fr.erdprt.samples.persistance.utility.PersistenceUnitBean">
+				<property name="transactionType" value="JTA"></property>
+				<!--
+				<property name="properties">
+					<props>
+						<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+					</props>
+				</property>
+				  -->
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	
+	<tx:jta-transaction-manager />
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+		<property name="transactionManagerName" value="java:jboss/TransactionManager" />
+		<property name="allowCustomIsolationLevels" value="true" />
+	</bean>
+	
+
+</beans>

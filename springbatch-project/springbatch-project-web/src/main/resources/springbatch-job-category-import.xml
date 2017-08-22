@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans.xsd 
+					http://www.springframework.org/schema/util 
+					http://www.springframework.org/schema/util/spring-util.xsd
+					http://www.springframework.org/schema/batch 
+	                http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<!--                           Category Job                                  -->
+
+	<bean id="storeCategoryProcessor" class="org.springframework.batch.item.support.CompositeItemProcessor">
+		<property name="delegates">
+			<list>
+				<ref bean="convertCategoryProcessor" />
+				<ref bean="categoryProcessor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="convertCategoryProcessor" class="fr.erdprt.samples.springbatch.processors.ConvertMessageProcessor" scope="step">
+	    <property name="convertMessage">
+	    	<bean class="fr.erdprt.samples.springbatch.utility.unmarshaller.ConvertMessageCategory">
+			</bean>
+	    </property>
+	</bean>
+
+	<bean id="categoryProcessor" class="fr.erdprt.samples.springbatch.processors.category.CategoryProcessor" scope="step">
+	    <property name="entityConverter">
+	    	<bean class="fr.erdprt.samples.springbatch.utility.converter.RefCategoryConverter">
+			</bean>
+	    </property>
+	</bean>
+	
+	<bean id="jpaBatchWriter" class="org.springframework.batch.item.database.JpaItemWriter" scope="step">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+	
+	<batch:step id="storeCategoryStep">
+		<batch:tasklet task-executor="categoryImportTaskExecutor">
+			<batch:chunk reader="defaultStaxReader" processor="storeCategoryProcessor" writer="jpaBatchWriter" commit-interval="#{jobParameters['commit.interval']}" />
+		</batch:tasklet>
+	</batch:step>
+	
+	<batch:job id="categoryImportJob" incrementer="jobParametersIncrementer" restartable="true">
+		<batch:step id="categoryImportStep" parent="storeCategoryStep" />
+	</batch:job>	
+	
+	<bean id="categoryImportTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" scope="singleton">
+		<property name="corePoolSize" value="${taskExecutor.default.corePoolSize}" />
+		<property name="maxPoolSize" value="${taskExecutor.default.maxPoolSize}" />
+		<property name="queueCapacity" value="${taskExecutor.default.queueCapacity}" />
+		<property name="keepAliveSeconds" value="${taskExecutor.default.keepAliveSeconds}" />
+		<property name="allowCoreThreadTimeOut" value="${taskExecutor.default.allowCoreThreadTimeOut}" />
+	</bean>
+	
+</beans>

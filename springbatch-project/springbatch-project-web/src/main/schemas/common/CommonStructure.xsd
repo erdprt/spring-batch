@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://erdprt.org/CommonStructure" xmlns:cn="http://erdprt.org/CommonStructure" elementFormDefault="qualified">
+
+    <xs:complexType name="MetaDataType">
+    	<xs:sequence>
+    		<xs:element name="from" type="xs:string" maxOccurs="1" minOccurs="1"/>
+    		<xs:element name="to" type="xs:string" maxOccurs="1" minOccurs="1"/>
+    		<xs:element name="nature" type="xs:string" maxOccurs="1" minOccurs="1"/>
+    		<xs:element name="contentType" type="xs:string" maxOccurs="1" minOccurs="1"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="MetaData" type="cn:MetaDataType"></xs:element>
+    
+    <xs:complexType name="ProductsType">
+    	<xs:sequence>
+    		<xs:element ref="cn:product" maxOccurs="unbounded" minOccurs="1"/>
+    	</xs:sequence>
+    	<xs:attribute name="count" type="xs:long"/>
+    </xs:complexType>
+
+	<xs:element name="products" type="cn:ProductsType"></xs:element>
+    
+    <xs:complexType name="ProductType">
+    	<xs:attribute name="code" type="xs:string"/>
+    	<xs:attribute name="label" type="xs:string" use="optional"/>
+		<xs:attribute name="id" type="xs:string" use="optional"/>  
+		<xs:attribute name="href" type="xs:string" use="optional"/>
+    	<xs:attribute name="quantity" type="xs:int"/>
+    	<xs:attribute name="date" type="xs:dateTime"/>
+    	<xs:attribute name="price" type="xs:double" use="optional"/>
+    	<xs:attribute name="category" type="xs:string"/>
+    	<xs:attribute name="available" type="xs:boolean" />
+    	<xs:attribute name="status" type="cn:StatusEnum" />
+    </xs:complexType>
+    
+    <xs:element name="product" type="cn:ProductType"></xs:element>
+
+    <xs:simpleType name="StatusEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE" />
+            <xs:enumeration value="DEPRECATED" />
+            <xs:enumeration value="FUTURE" />
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

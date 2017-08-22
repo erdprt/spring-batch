@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<ns2:Message xmlns:ns2="http://erdprt.org/OrderStructure"
+	xmlns="http://erdprt.org/CommonStructure">
+	<MetaData>
+		<from>from</from>
+		<to>to</to>
+		<nature>default.orders</nature>
+		<contentType>xml</contentType>
+	</MetaData>
+	<ns2:Body>
+		<ns2:orders count="5">
+			<ns2:person id="eef3a7eb-0be5-4164-b75e-ef16238330a7"
+				code="PERS66">
+				<ns2:civilStatus>
+					<ns2:lastName>lastName-0</ns2:lastName>
+					<ns2:firstName>firName-0</ns2:firstName>
+					<ns2:civility>M</ns2:civility>
+					<ns2:birthDate>2014-05-29T22:10:40.368+02:00</ns2:birthDate>
+					<ns2:nationality>france</ns2:nationality>
+				</ns2:civilStatus>
+				<ns2:address>
+					<ns2:street>street-0</ns2:street>
+					<ns2:city>Lille</ns2:city>
+					<ns2:zipCode>92700</ns2:zipCode>
+				</ns2:address>
+				<products count="2">
+					<product code="PROD1" id="776c1893-24dc-408d-8490-230e011efcc5"
+						href="eef3a7eb-0be5-4164-b75e-ef16238330a7" quantity="122"
+						date="2014-05-29T22:10:40.371+02:00" price="41.4" category="CAT3"></product>
+					<product code="PROD2" id="bde60163-2361-4497-989d-f729c8f29116"
+						href="eef3a7eb-0be5-4164-b75e-ef16238330a7" quantity="1090"
+						date="2014-05-29T22:10:40.371+02:00" price="126.49999999999999"
+						category="CAT2"></product>
+				</products>
+			</ns2:person>
+			<ns2:person id="dee1632e-eecd-41e8-8f9c-ff119cd910c1"
+				code="PERS9">
+				<ns2:civilStatus>
+					<ns2:lastName>lastName-1</ns2:lastName>
+					<ns2:firstName>firName-1</ns2:firstName>
+					<ns2:civility>F</ns2:civility>
+					<ns2:birthDate>2014-05-29T22:10:40.372+02:00</ns2:birthDate>
+					<ns2:nationality>france</ns2:nationality>
+				</ns2:civilStatus>
+				<ns2:address>
+					<ns2:street>street-1</ns2:street>
+					<ns2:city>Lyon</ns2:city>
+					<ns2:zipCode>94100</ns2:zipCode>
+				</ns2:address>
+				<products count="1">
+					<product code="PROD1" id="fbdef581-36b6-4dec-a1b5-a8cb8a3b5817"
+						href="dee1632e-eecd-41e8-8f9c-ff119cd910c1" quantity="384"
+						date="2014-05-29T22:10:40.372+02:00" price="218.49999999999997"
+						category="CAT1"></product>
+				</products>
+			</ns2:person>
+			<ns2:person id="a0ced029-bb6b-4867-8c34-9c304cf66bfe"
+				code="PERS98">
+				<ns2:civilStatus>
+					<ns2:lastName>lastName-2</ns2:lastName>
+					<ns2:firstName>firName-2</ns2:firstName>
+					<ns2:civility>M</ns2:civility>
+					<ns2:birthDate>2014-05-29T22:10:40.372+02:00</ns2:birthDate>
+					<ns2:nationality>france</ns2:nationality>
+				</ns2:civilStatus>
+				<ns2:address>
+					<ns2:street>street-2</ns2:street>
+					<ns2:city>Lille</ns2:city>
+					<ns2:zipCode>75001</ns2:zipCode>
+				</ns2:address>
+				<products count="3">
+					<product code="PROD2" id="dea87cd6-023d-4d9c-aba6-bc7557e62698"
+						href="a0ced029-bb6b-4867-8c34-9c304cf66bfe" quantity="1560"
+						date="2014-05-29T22:10:40.372+02:00" price="82.8" category="CAT1"></product>
+				</products>
+			</ns2:person>
+			<ns2:person id="347bf6b7-bed4-44c9-8adc-418fc20f8873"
+				code="PERS15">
+				<ns2:civilStatus>
+					<ns2:lastName>lastName-3</ns2:lastName>
+					<ns2:firstName>firName-3</ns2:firstName>
+					<ns2:civility>F</ns2:civility>
+					<ns2:birthDate>2014-05-29T22:10:40.372+02:00</ns2:birthDate>
+					<ns2:nationality>france</ns2:nationality>
+				</ns2:civilStatus>
+				<ns2:address>
+					<ns2:street>street-3</ns2:street>
+					<ns2:city>Lyon</ns2:city>
+					<ns2:zipCode>75002</ns2:zipCode>
+				</ns2:address>
+				<products count="8">
+					<product code="PROD2" id="8c0d2a99-283a-418c-80d6-5ea9d9020a74"
+						href="347bf6b7-bed4-44c9-8adc-418fc20f8873" quantity="1975"
+						date="2014-05-29T22:10:40.372+02:00" price="66.69999999999999"
+						category="CAT4"></product>
+					<product code="PROD1" id="811f3241-c0c8-442b-892a-6b840c37cb24"
+						href="347bf6b7-bed4-44c9-8adc-418fc20f8873" quantity="471"
+						date="2014-05-29T22:10:40.372+02:00" price="163.29999999999998"
+						category="CAT4"></product>
+				</products>
+			</ns2:person>
+			<ns2:person id="795226f9-6f19-44f1-b556-9682f48bdac4"
+				code="PERS94">
+				<ns2:civilStatus>
+					<ns2:lastName>lastName-4</ns2:lastName>
+					<ns2:firstName>firName-4</ns2:firstName>
+					<ns2:civility>M</ns2:civility>
+					<ns2:birthDate>2014-05-29T22:10:40.373+02:00</ns2:birthDate>
+					<ns2:nationality>france</ns2:nationality>
+				</ns2:civilStatus>
+				<ns2:address>
+					<ns2:street>street-4</ns2:street>
+					<ns2:city>Strasbourg</ns2:city>
+					<ns2:zipCode>75003</ns2:zipCode>
+				</ns2:address>
+				<products count="10">
+					<product code="PROD1" id="96b92b32-8264-4490-baa3-d2bbf234820b"
+						href="795226f9-6f19-44f1-b556-9682f48bdac4" quantity="844"
+						date="2014-05-29T22:10:40.373+02:00" price="220.79999999999998"
+						category="CAT3"></product>
+				</products>
+			</ns2:person>
+		</ns2:orders>
+	</ns2:Body>
+</ns2:Message>

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<ns2:Message xmlns:ns2="http://erdprt.org/InventoryStructure"
+	xmlns="http://erdprt.org/CommonStructure">
+	<MetaData>
+		<from>fromApplication1</from>
+		<to>toApplication2</to>
+		<nature>inventory.update</nature>
+		<contentType>xml</contentType>
+	</MetaData>
+	<ns2:Body>
+		<ns2:inventory>
+			<products count="1">
+				<product code="PROD2" id="008debfd-686e-4465-97aa-8cf86148a17b"
+					quantity="1952" date="2014-05-08T23:02:27.085+02:00" price="158.7"
+					category="CAT1" available="true" status="ACTIVE"></product>
+			</products>
+		</ns2:inventory>
+	</ns2:Body>
+</ns2:Message>

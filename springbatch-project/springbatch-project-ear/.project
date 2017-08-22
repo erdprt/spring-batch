@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>springbatch-project-ear</name>
+  <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>springbatch-project-web</project>
+    <project>products-jpa</project>
+    <project>products-services</project>
+  </projects>
+  <buildSpec/>
+  <natures/>
+</projectDescription>

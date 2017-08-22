@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://erdprt.org/PersonStructure" 
+		xmlns:tns="http://erdprt.org/PersonStructure" 
+		xmlns:cn="http://erdprt.org/CommonStructure"
+		elementFormDefault="qualified">
+		
+	<xs:import namespace="http://erdprt.org/CommonStructure" schemaLocation="../common/CommonStructure.xsd"/>
+
+	<xs:element name="Message" type="tns:MessageType"/>
+
+    <xs:complexType name="MessageType">
+    	<xs:sequence>
+    		<xs:element ref="cn:MetaData"/>
+    		<xs:element name="Body" type="tns:BodyType" maxOccurs="1" minOccurs="1"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="BodyType">
+    	<xs:sequence>
+    		<xs:element name="persons" type="tns:PersonsType"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+     <xs:complexType name="PersonsType">
+    	<xs:sequence>
+    		<xs:element name="person" type="tns:PersonType" maxOccurs="unbounded" minOccurs="1"/>
+    	</xs:sequence>
+    	<xs:attribute name="count" type="xs:long"/>
+    </xs:complexType>
+    
+    <xs:complexType name="PersonType">
+    	<xs:attribute name="id" type="xs:string"/>
+    	<xs:attribute name="lastName" type="xs:string"/>
+    	<xs:attribute name="firstName" type="xs:string"/>
+    	<xs:attribute name="civility" type="xs:string"/>
+    	<xs:attribute name="birthDate" type="xs:dateTime"/>
+    	<xs:attribute name="nationality" type="xs:string"/>
+    	<xs:attribute name="street" type="xs:string"/>
+    	<xs:attribute name="city" type="xs:string"/>
+    	<xs:attribute name="zipCode" type="xs:string"/>
+    </xs:complexType>
+
+
+</xs:schema>

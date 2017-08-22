@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 targetNamespace="http://erdprt.org/InventoryStructure" 
+	 xmlns:tns="http://erdprt.org/InventoryStructure" 
+	 xmlns:cn="http://erdprt.org/CommonStructure"
+	 elementFormDefault="qualified">
+	<xs:import namespace="http://erdprt.org/CommonStructure" schemaLocation="../common/CommonStructure.xsd"/>
+
+	<xs:element name="Message" type="tns:MessageType"/>
+
+    <xs:complexType name="MessageType">
+    	<xs:sequence>
+			<xs:element ref="cn:MetaData" />
+    		<xs:element name="Body" type="tns:BodyType" maxOccurs="1" minOccurs="1"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BodyType">
+    	<xs:sequence>
+    		<xs:element name="inventory" type="tns:InventoryType" maxOccurs="1" minOccurs="1"/>
+    	</xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InventoryType">
+    	<xs:sequence>
+    		<xs:element ref="cn:products"/>
+    	</xs:sequence>
+    </xs:complexType>
+      
+      
+</xs:schema>
